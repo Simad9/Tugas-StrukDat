@@ -7,10 +7,10 @@ using namespace std;
 // STRUCT
 // ...
 
-// FUNGSI LOGIKA
+// FUNGSI LOGIKA (BACK-END)
 // ...
 
-// FUNGSI TAMPILAN
+// FUNGSI TAMPILAN (FRONT-END)
 // ...
 
 int main() {
