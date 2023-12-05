@@ -1,10 +1,16 @@
 #include <iostream>
 using namespace std;
 
+// DEKLARASI
+// ...
+
 // STRUCT
 // ...
 
-// FUNGSI-FUNGSI
+// FUNGSI LOGIKA
+// ...
+
+// FUNGSI TAMPILAN
 // ...
 
 int main() {
