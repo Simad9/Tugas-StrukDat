@@ -2,20 +2,20 @@
 #include <unordered_map>
 using namespace std;
 
-// DEKLARASI
-// ...
-
 // STRUCT
 struct Data {
   string namaProduk;
   int harga;
   int kodeProduk;
 };
+
+// DEKLARASI
 // Data ada 10
 Data produk[10];
 
 // FUNGSI LOGIKA (BACK-END)
-// Fungsi hash sederhana untuk menghasilkan nilai hash dari string (sting nama produk)
+// Fungsi hash sederhana untuk menghasilkan nilai hash dari string (sting nama
+// produk)
 int simpleHash(const string& input) {
   int hash = 0;
   for (char c : input) {
@@ -56,6 +56,22 @@ void outputData() {
   system("pause");
 }
 
+void searchData(){
+  // Code...
+}
+
+void sortData(){
+  // Code...
+}
+
+void deleteData(){
+  // Code...
+}
+
+void outputHistory(){
+  // Code...
+}
+
 // MAIN PROGRAM
 int main() {
   // Deklarasi Variable
@@ -76,7 +92,7 @@ int main() {
     cout << "| 3. Search Data                   |\n";
     cout << "| 4. Sort Data                     |\n";
     cout << "| 5. Delete Data                   |\n";
-    cout << "| 6. Delete History                |\n";
+    cout << "| 6. Output History                |\n";
     cout << "+==================================+\n";
     cout << "  Pilih menu : ";
 
@@ -93,16 +109,23 @@ int main() {
     }
 
     if (pilihMenu == 1) {  // 1. Input Data
+      // perintah::input/penyisipan struktur hash
       inputData();
     } else if (pilihMenu == 2) {  // 2. Ouput Data
+     // perintah::Tampilkan dengan struktur hash
       outputData();
     } else if (pilihMenu == 3) {  // 3. Search Data
-
+      // perintah::struktur hash dengan kunci kode
+      searchData();
     } else if (pilihMenu == 4) {  // 4. Sort Data
-
+      // perintah::PTB post-order secara Descending(dsc)
+      sortData();
     } else if (pilihMenu == 5) {  // 5. Delete Data
-
-    } else if (pilihMenu == 6) {  // 6. Delete History
+      // perintah::struktur hash dengan kunci kode
+      deleteData();
+    } else if (pilihMenu == 6) {  // 6. Output History
+      // perintah::PTB in-order, post-order, pre-order
+      outputHistory();
     }
 
   } while (true);
