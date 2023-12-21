@@ -1,186 +1,204 @@
 #include <iostream>
 #include <unordered_map>
-using namespace std;
+#include <vector>
+#include <algorithm>
 
-// STRUCT
-struct Data {
-  string namaProduk;
-  int harga;
-  int kodeProduk;
-
-  Data* next;
+struct Product {
+    std::string name;
+    double price;
+    int code;
 };
 
-// DEKLARASI
-// Data ada 10
-Data produk[10];
+// Hash table to store product information
+std::unordered_map<int, Product> productHash;
 
-// FUNGSI LOGIKA (BACK-END)
-// Fungsi hash sederhana untuk menghasilkan nilai hash dari string (sting nama
-// produk)
-int simpleHash(const string& input) {
-  int hash = 0;
-  for (char c : input) {
-    hash = hash * 31 + c;
-  }
-  return hash;
+// Binary Search Tree (Binary Search Tree) to store products based on product names
+struct TreeNode {
+    Product data;
+    TreeNode* left;
+    TreeNode* right;
+};
+
+// Function to insert product into Binary Search Tree
+void insertProduct(TreeNode*& root, const Product& product) {
+    if (root == nullptr) {
+        root = new TreeNode{product, nullptr, nullptr};
+    } else {
+        if (product.name < root->data.name) {
+            insertProduct(root->left, product);
+        } else {
+            insertProduct(root->right, product);
+        }
+    }
 }
 
-void searchHash(int cariKodeProduk) {
-  // Code
+// Function to perform post-order traversal for sorting products by name in descending order
+void postOrderTraversal(TreeNode* root) {
+    if (root != nullptr) {
+        postOrderTraversal(root->right);
+        std::cout << "Product Name: " << root->data.name << ", Price: " << root->data.price << ", Code: " << root->data.code << std::endl;
+        postOrderTraversal(root->left);
+    }
 }
 
-void searchPTB(string cariNamaProduk) {
-  // Code
+// Function to search products based on name range in Binary Search Tree
+void searchByNameRange(TreeNode* root, const std::string& startName, const std::string& endName, std::vector<Product>& result) {
+    if (root != nullptr) {
+        if (root->data.name >= startName && root->data.name <= endName) {
+            result.push_back(root->data);
+        }
+
+        if (root->data.name >= startName) {
+            searchByNameRange(root->left, startName, endName, result);
+        }
+
+        if (root->data.name <= endName) {
+            searchByNameRange(root->right, startName, endName, result);
+        }
+    }
 }
+std::vector<Product> deletedProducts;  // Add this line before main
 
-// FUNGSI TAMPILAN (FRONT-END)
-// Kurang tau fungsinya
-unordered_map<int, string> hashTable;
-
-// INPUT DATA
-void inputData() {
-  // Testing doang ini
-  cout << "\n~~ INPUT PRODUK ~~\n" << endl;
-  cout << "Masukan Produk : " << endl;
-  cout << "Nama : ";
-  getline(cin >> ws, produk->namaProduk);
-  cout << "Harga : ";
-  cin >> produk->harga;
-
-  // Untung hasing dari namanya
-  int hashValue = simpleHash(produk->namaProduk);
-  hashTable[hashValue] = produk->namaProduk;
-}
-
-// OUTPUT DATA
-void outputData() {
-  // Nampilin doang, buat testing
-  cout << "\n~~ OUTPUT PRODUK ~~\n" << endl;
-  cout << "Tampilan Produk" << endl;
-  cout << "Nama : " << produk->namaProduk << endl;
-  cout << "Harga : " << produk->harga << endl;
-  //  --- hasingnya ---
-  // Output data
-  cout << "\nData yang dimasukkan:" << endl;
-  for (const auto& entry : hashTable) {
-    cout << "Hash: " << entry.first << ", Nilai: " << entry.second << endl;
-  }
-  // Biar gak ilang, soalnya cuman coba aja
-  system("pause");
-}
-
-// SEARCH DATA
-void searchData() {
-  cout << "\n~~ Search ~~\n" << endl;
-  cout << "Ingin mencari berdasarkan apa? : " << endl;
-  cout << "1. Kode Produk" << endl;
-  cout << "2. Nama Produk" << endl;
-  cout << "Pilih : ";
-  int pilihSearch;
-  cin >> pilihSearch;
-  if (pilihSearch == 1) {
-    // Searching Hash
-    cout << "Silahkan isi data yang akan dicari" << endl;
-    cout << "Kode Produk = ";
-    int cariKodeProduk;
-    cin >> cariKodeProduk;
-    searchHash(cariKodeProduk);
-  } else if (pilihSearch == 2) {
-    // Searching PTB
-    cout << "Silahkan isi data yang akan dicari" << endl;
-    cout << "Nama Produk = ";
-    string cariNamaProduk;
-    getline(cin >> ws, cariNamaProduk);
-    searchPTB(cariNamaProduk);
-  } else {
-    cout << "Tidak Ada dipilihan" << endl << endl;
-    return;
-  }
-}
-
-// SORT DATA
-void sortData() {
-  // Note : Sorting PTB descending dari nama
-  cout << "\n~~ SORTING ~~\n" << endl;
-  cout << "Sorting berdasarkan nama secara Descending" << endl;
-  
-}
-
-// DELETE DATA
-void deleteData() {
-  cout << "\n~~ DELETE ~~\n" << endl;
-  // Logika codenya
-  // 1. Pilih data mana yang akan dihapus
-  // 2. Pindahkan data itu ke history
-  // 3. Hapus datanya
-}
-
-void outputHistory() {
-  cout << "\n~~ OUTPUT HISTORY ~~\n" << endl;
-  // Logika codenya
-  // 1. Cek historynya
-  // 2. Jika kosong tampilkan kosong
-  // 3. Jika ada maka tampilkan data yang ada di History
-}
-
-// MAIN PROGRAM
 int main() {
-  // Deklarasi Variable
-  int pilihMenu;
-  do {
-    // Tampilan Awal
-    system("cls");
-    cout << "+==================================+\n";
-    cout << "|            1232200010            |\n";
-    cout << "|            1232200019            |\n";
-    cout << "|            1232200021            |\n";
-    cout << "|            1232200031            |\n";
-    cout << "+==================================+\n";
-    cout << "|          Toko Serba Ada          |\n";
-    cout << "+==================================+\n";
-    cout << "| 1. Input Data                    |\n";
-    cout << "| 2. Output Data                   |\n";
-    cout << "| 3. Search Data                   |\n";
-    cout << "| 4. Sort Data                     |\n";
-    cout << "| 5. Delete Data                   |\n";
-    cout << "| 6. Output History                |\n";
-    cout << "+==================================+\n";
-    cout << "  Pilih menu : ";
+    int option;
+    TreeNode* root = nullptr;  // Add this line
 
-    // Input Menu
-    cin >> pilihMenu;
+    do {
+        std::cout << "\n=== Menu ===" << std::endl;
+        std::cout << "1. Input Product\n";
+        std::cout << "2. Display Products (using hash)\n";
+        std::cout << "3. Delete Product (using hash)\n";
+        std::cout << "4. Search Product by Code (using hash)\n";
+        std::cout << "5. Search Product by Name Range (using binary search tree)\n";
+        std::cout << "6. Sort Products by Name (Descending) (using binary search tree)\n";
+        std::cout << "7. View Deleted Products History\n";
+        std::cout << "8. Exit\n";
+        std::cout << "Choose an option: ";
+        std::cin >> option;
 
-    // Error Handling Input Menu
-    if (cin.fail() || pilihMenu < 1 || pilihMenu > 6) {
-      cout << "  Inputan tidak terdeteksi!\n  ";
-      cin.clear();
-      cin.ignore();
-      system("pause");
-      continue;
-    }
+        switch (option) {
+            case 1: {
+                Product newProduct;
+                std::cout << "Enter product name: ";
+                std::cin >> newProduct.name;
+                std::cout << "Enter product price: ";
+                std::cin >> newProduct.price;
+                std::cout << "Enter product code: ";
+                std::cin >> newProduct.code;
 
-    if (pilihMenu == 1) {  // 1. Input Data
-      // perintah::input/penyisipan struktur hash
-      inputData();
-    } else if (pilihMenu == 2) {  // 2. Ouput Data
-                                  // perintah::Tampilkan dengan struktur hash
-      outputData();
-    } else if (pilihMenu == 3) {  // 3. Search Data
-      // perintah::struktur hash dengan kunci kode
-      searchData();
-    } else if (pilihMenu == 4) {  // 4. Sort Data
-      // perintah::PTB post-order secara Descending(dsc)
-      sortData();
-    } else if (pilihMenu == 5) {  // 5. Delete Data
-      // perintah::struktur hash dengan kunci kode
-      deleteData();
-    } else if (pilihMenu == 6) {  // 6. Output History
-      // perintah::PTB in-order, post-order, pre-order
-      outputHistory();
-    }
+                // Insert into hash table
+                productHash[newProduct.code] = newProduct;
 
-  } while (true);
+                // Insert into binary search tree
+                insertProduct(root, newProduct);
 
-  return 0;
+                break;
+            }
+
+            case 2: {
+                // Display products using hash table
+                for (const auto& entry : productHash) {
+                    const Product& product = entry.second;
+                    std::cout << "Product Name: " << product.name << ", Price: " << product.price << ", Code: " << product.code << std::endl;
+                }
+                break;
+            }
+
+            case 3: {
+                // Delete product using hash table
+                int deleteCode;
+                std::cout << "Enter product code to delete: ";
+                std::cin >> deleteCode;
+
+                auto it = productHash.find(deleteCode);
+                if (it != productHash.end()) {
+                    // Insert into binary search tree for history
+                    deletedProducts.push_back(it->second);
+
+                    // Erase from hash table
+                    productHash.erase(it);
+                    std::cout << "Product with code " << deleteCode << " deleted.\n";
+                } else {
+                    std::cout << "Product with code " << deleteCode << " not found.\n";
+                }
+
+                break;
+            }
+
+            case 4: {
+                // Search product by code using hash table
+                int searchCode;
+                std::cout << "Enter product code to search: ";
+                std::cin >> searchCode;
+
+                auto it = productHash.find(searchCode);
+                if (it != productHash.end()) {
+                    const Product& product = it->second;
+                    std::cout << "Product found: " << product.name << ", Price: " << product.price << ", Code: " << product.code << std::endl;
+                } else {
+                    std::cout << "Product with code " << searchCode << " not found.\n";
+                }
+
+                break;
+            }
+
+            case 5: {
+                // Search product by name range using binary search tree
+                std::string startName, endName;
+                std::cout << "Enter start of name range: ";
+                std::cin >> startName;
+                std::cout << "Enter end of name range: ";
+                std::cin >> endName;
+
+                std::vector<Product> result;
+                searchByNameRange(root, startName, endName, result);
+
+                if (!result.empty()) {
+                    std::cout << "Products in the specified name range:\n";
+                    for (const auto& product : result) {
+                        std::cout << "Product Name: " << product.name << ", Price: " << product.price << ", Code: " << product.code << std::endl;
+                    }
+                } else {
+                    std::cout << "No products found in the specified name range.\n";
+                }
+
+                break;
+            }
+
+            case 6: {
+                // Sort products by name in descending order using binary search tree
+                std::cout << "Products sorted by name (Descending):\n";
+                postOrderTraversal(root);
+                break;
+            }
+
+            case 7: {
+                // View deleted products history
+                if (!deletedProducts.empty()) {
+                    std::cout << "Deleted Products History:\n";
+                    for (const auto& product : deletedProducts) {
+                        std::cout << "Product Name: " << product.name << ", Price: " << product.price << ", Code: " << product.code << std::endl;
+                    }
+                } else {
+                    std::cout << "No deleted products history.\n";
+                }
+
+                break;
+            }
+
+            case 8:
+                std::cout << "Exiting program.\n";
+                break;
+
+            default:
+                std::cout << "Invalid option. Please try again.\n";
+                break;
+        }
+
+    } while (option != 8);
+
+    // Clean up memory for binary search tree (if needed)
+    // ...
+
+    return 0;
 }
