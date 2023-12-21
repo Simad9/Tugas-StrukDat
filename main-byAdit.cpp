@@ -5,12 +5,14 @@
 
 using namespace std;  // Add this line
 
-// ===== STRUCT =====
 struct Product {
   string name;
   double price;
   int code;
 };
+
+// Hash table to store product information
+unordered_map<int, Product> productHash;
 
 // Binary Search Tree (Binary Search Tree) to store products based on product
 // names
@@ -19,12 +21,6 @@ struct TreeNode {
   TreeNode* left;
   TreeNode* right;
 };
-
-// Hash table to store product information
-unordered_map<int, Product> productHash;
-TreeNode* root = nullptr;  // Add this line
-
-// ======= FUNGSI LOGIKA (BACK-END) ========
 
 // Function to insert product into Binary Search Tree
 void insertProduct(TreeNode*& root, const Product& product) {
@@ -71,116 +67,51 @@ void searchByNameRange(TreeNode* root, const string& startName,
 
 vector<Product> deletedProducts;  // Add this line before main
 
-// ======== FUNGSI TAMPILAN (FRONT-END) ========
-void input() {
-  Product newProduct;
-
-  cout << "Masukan Data Produk : \n";
-  cout << "Nama Produk  : ";
-  cin >> newProduct.name;
-  cout << "Harga Produk : ";
-  cin >> newProduct.price;
-  cout << "Kode Produk  : ";
-  cin >> newProduct.code;
-
-  // Insert into hash table
-  productHash[newProduct.code] = newProduct;
-
-  // Insert into binary search tree
-  insertProduct(root, newProduct);
-}
-void output() {
-  // Display products using hash table
-  int index = 1;
-  cout << "List Produk : \n";
-  for (const auto& entry : productHash) {
-    const Product& product = entry.second;
-
-    // Tampilan Output versi 1
-    // cout << "+=====================+\n";
-    // cout << "| Code | Nama | Harga |\n";
-    // cout << "+------+------+-------+\n";
-    // cout << "| " << product.code << " | " << product.name << " |  "
-    //      << product.price << " |\n";
-    // cout << "+=====================+\n";
-    // cout << endl;
-
-    // Tampilan Output versi 2
-    cout << "Nama  : " << product.name << endl;
-    cout << "Harga : " << product.price << endl;
-    cout << "Code  : " << product.code << endl << endl;
-  }
-}
-void outputHistory() {
-  // View deleted products history
-  if (!deletedProducts.empty()) {
-    cout << "History Product Terhapus:\n";
-    for (const auto& product : deletedProducts) {
-      // Tampilan Output versi 1
-      // cout << "+=====================+\n";
-      // cout << "| Code | Nama | Harga |\n";
-      // cout << "+------+------+-------+\n";
-      // cout << "| " << product.code << " | " << product.name << " |  "
-      //      << product.price << " |\n";
-      // cout << "+=====================+\n";
-      // cout << endl;
-
-      // Tampilan Output versi 2
-      cout << "Nama  : " << product.name << endl;
-      cout << "Harga : " << product.price << endl;
-      cout << "Code  : " << product.code << endl << endl;
-    }
-  } else {
-    cout << "No deleted products history.\n";
-  }
-}
 int main() {
-
-  // Deklarasi Variable
-  int pilihMenu;
-  char menu;
+  int option;
+  TreeNode* root = nullptr;  // Add this line
 
   do {
-    // Tampilan Awal
-    system("cls");
-    cout << "+==================================+\n";
-    cout << "|            1232200010            |\n";
-    cout << "|            1232200019            |\n";
-    cout << "|            1232200021            |\n";
-    cout << "|            1232200031            |\n";
-    cout << "+==================================+\n";
-    cout << "|          Toko Serba Ada          |\n";
-    cout << "+==================================+=========================+\n";
+    cout << "\n=== Menu ===" << endl;
+    cout << "1. Input Product\n";
+    cout << "2. Display Products (using hash)\n";
+    cout << "3. Delete Product (using hash)\n";
+    cout << "4. Search Product by Code (using hash)\n";
+    cout << "5. Search Product by Name Range (using binary search tree)\n";
     cout
-        << "| 1. Input Product                                           |\n";  // INPUT
-    cout
-        << "| 2. Display Products (using hash)                           |\n";  // OUTPUT
-    cout
-        << "| 3. Delete Product (using hash)                             |\n";  // DELETE
-    cout
-        << "| 4. Search Product by Code (using hash)                     |\n";  // SEARCH BY CODE
-    cout
-        << "| 5. Search Product by Name Range (using binary search tree) |\n";  // SEARCH BY NAME
-    cout
-        << "| 6. Sort Products by Name (Descending) (using binary search)|\n";  // SORT
-    cout
-        << "| 7. View Deleted Products History                           |\n";  // OUTPUT HISTORY
-    cout
-        << "| 8. Exit                                                    |\n";  // EXIT
-    cout << "+============================================================+\n";
-    cout << "Pilih menu : ";
-    // Input Menu
-    cin >> pilihMenu;
-    cout << endl;
-    switch (pilihMenu) {
+        << "6. Sort Products by Name (Descending) (using binary search tree)\n";
+    cout << "7. View Deleted Products History\n";
+    cout << "8. Exit\n";
+    cout << "Choose an option: ";
+    cin >> option;
+
+    switch (option) {
       case 1: {
-        input();
+        Product newProduct;
+        cout << "Enter product name: ";
+        cin >> newProduct.name;
+        cout << "Enter product price: ";
+        cin >> newProduct.price;
+        cout << "Enter product code: ";
+        cin >> newProduct.code;
+
+        // Insert into hash table
+        productHash[newProduct.code] = newProduct;
+
+        // Insert into binary search tree
+        insertProduct(root, newProduct);
+
         break;
       }
 
       case 2: {
-
-        output();
+        // Display products using hash table
+        for (const auto& entry : productHash) {
+          const Product& product = entry.second;
+          cout << "Product Name: " << product.name
+               << ", Price: " << product.price << ", Code: " << product.code
+               << endl;
+        }
         break;
       }
 
@@ -257,21 +188,34 @@ int main() {
       }
 
       case 7: {
-        outputHistory();
+        // View deleted products history
+        if (!deletedProducts.empty()) {
+          cout << "Deleted Products History:\n";
+          for (const auto& product : deletedProducts) {
+            cout << "Product Name: " << product.name
+                 << ", Price: " << product.price << ", Code: " << product.code
+                 << endl;
+          }
+        } else {
+          cout << "No deleted products history.\n";
+        }
+
         break;
       }
 
       case 8:
         cout << "Exiting program.\n";
-        exit(1);
         break;
 
       default:
         cout << "Invalid option. Please try again.\n";
         break;
     }
-    cout << "\nKembali ke menu? (y/n) = ";
-    cin >> menu;
-  } while (menu == 'y');
+
+  } while (option != 8);
+
+  // Clean up memory for binary search tree (if needed)
+  // ...
+
   return 0;
 }

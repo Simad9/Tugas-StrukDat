@@ -1,6 +1,7 @@
 #include <iostream>
 #include <unordered_map>
 using namespace std;
+
 // STRUCT
 struct Data {
   string namaProduk;
