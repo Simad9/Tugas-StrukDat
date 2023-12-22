@@ -7,38 +7,49 @@
 using namespace std;
 
 // Struktur Produk
-struct Product {
+struct Product
+{
   string name;
   double price;
   int code;
 };
 
 // Node untuk Pohon Pencarian Biner (Binary Search Tree)
-struct TreeNode {
+struct TreeNode
+{
   Product data;
-  TreeNode* left;
-  TreeNode* right;
+  TreeNode *left;
+  TreeNode *right;
 };
 
 unordered_map<int, Product> productHash;
-TreeNode* root = nullptr;
+TreeNode *root = nullptr;
 
 // Fungsi untuk memasukkan produk ke dalam Pohon Pencarian Biner
-void insertProduct(TreeNode*& root, const Product& product) {
-  if (root == nullptr) {
+void insertProduct(TreeNode *&root, const Product &product)
+{
+  if (root == nullptr)
+  {
     root = new TreeNode{product, nullptr, nullptr};
-  } else {
-    if (product.name < root->data.name) {
+  }
+  else
+  {
+    if (product.name < root->data.name)
+    {
       insertProduct(root->left, product);
-    } else {
+    }
+    else
+    {
       insertProduct(root->right, product);
     }
   }
 }
 
 // Fungsi untuk menghapus Pohon Pencarian Biner
-void deleteTree(TreeNode* root) {
-  if (root != nullptr) {
+void deleteTree(TreeNode *root)
+{
+  if (root != nullptr)
+  {
     deleteTree(root->left);
     deleteTree(root->right);
     delete root;
@@ -47,8 +58,10 @@ void deleteTree(TreeNode* root) {
 
 // Fungsi untuk melakukan traversal pasca pesanan untuk mengurutkan produk
 // berdasarkan nama dalam urutan menurun
-void postOrderTraversal(TreeNode* root) {
-  if (root != nullptr) {
+void postOrderTraversal(TreeNode *root)
+{
+  if (root != nullptr)
+  {
     postOrderTraversal(root->right);
     cout << "+----------+----------+-----------+\n";
     cout << left << "| " << setw(8) << root->data.code << " | " << setw(8)
@@ -59,18 +72,23 @@ void postOrderTraversal(TreeNode* root) {
 }
 
 // Fungsi untuk mencari produk berdasarkan rentang nama di Pohon Pencarian Biner
-void searchByNameRange(TreeNode* root, const string& startName,
-                       const string& endName, vector<Product>& result) {
-  if (root != nullptr) {
-    if (root->data.name >= startName && root->data.name <= endName) {
+void searchByNameRange(TreeNode *root, const string &startName,
+                       const string &endName, vector<Product> &result)
+{
+  if (root != nullptr)
+  {
+    if (root->data.name >= startName && root->data.name <= endName)
+    {
       result.push_back(root->data);
     }
 
-    if (root->data.name >= startName) {
+    if (root->data.name >= startName)
+    {
       searchByNameRange(root->left, startName, endName, result);
     }
 
-    if (root->data.name <= endName) {
+    if (root->data.name <= endName)
+    {
       searchByNameRange(root->right, startName, endName, result);
     }
   }
@@ -79,13 +97,15 @@ void searchByNameRange(TreeNode* root, const string& startName,
 vector<Product> deletedProducts;
 
 // Fungsi untuk membersihkan memori dan keluar dari program
-void cleanupAndExit() {
+void cleanupAndExit()
+{
   deleteTree(root);
   exit(0);
 }
 
 // Fungsi untuk menampilkan produk
-void displayProduct(const Product& product) {
+void displayProduct(const Product &product)
+{
   cout << "+----------+----------+-----------+\n";
   cout << left << "| " << setw(8) << product.code << " | " << setw(8)
        << product.name << " | Rp." << setw(6) << product.price << " |\n";
@@ -93,7 +113,8 @@ void displayProduct(const Product& product) {
 
 // ======= FUNGSI TAMPILAN (FRONT-END) ========
 
-void inputProduct() {
+void inputProduct()
+{
   Product newProduct;
   cout << "Masukkan Data Produk : \n";
   cout << "Nama Produk  : ";
@@ -103,71 +124,94 @@ void inputProduct() {
   cout << "Kode Produk  : ";
   cin >> newProduct.code;
 
-  productHash[newProduct.code] = newProduct;
-  insertProduct(root, newProduct);
+  if (productHash.count(newProduct.code))
+  {
+    cout << "Kode sudah digunakan!\n";
+  }
+  else
+  {
+    productHash[newProduct.code] = newProduct;
+    insertProduct(root, newProduct);
+  }
 }
 
-void outputProduct() {
+void outputProduct()
+{
   cout << "List Produk : \n";
   cout << "+==========+==========+===========+\n";
   cout << "|   Code   |   Nama   |   Harga   |\n";
-  for (const auto& entry : productHash) {
+  for (const auto &entry : productHash)
+  {
     displayProduct(entry.second);
   }
   cout << "+==========+==========+===========+\n";
   cout << endl;
 }
 
-void outputHistory() {
-  if (!deletedProducts.empty()) {
+void outputHistory()
+{
+  if (!deletedProducts.empty())
+  {
     cout << "Lihat Riwayat Produk yang Dihapus :\n";
     cout << "+==========+==========+===========+\n";
     cout << "|   Code   |   Nama   |   Harga   |\n";
-    for (const auto& product : deletedProducts) {
+    for (const auto &product : deletedProducts)
+    {
       displayProduct(product);
     }
     cout << "+==========+==========+===========+\n";
     cout << endl;
-  } else {
+  }
+  else
+  {
     cout << "Tidak ada riwayat produk yang dihapus.\n";
   }
 }
 
-void deleteProduct() {
+void deleteProduct()
+{
   int deleteCode;
   cout << "Masukkan kode produk yang akan dihapus : ";
   cin >> deleteCode;
 
   auto it = productHash.find(deleteCode);
-  if (it != productHash.end()) {
+  if (it != productHash.end())
+  {
     deletedProducts.push_back(it->second);
     productHash.erase(it);
     cout << "Produk dengan kode " << deleteCode << " berhasil dihapus.\n";
-  } else {
+  }
+  else
+  {
     cout << "Produk dengan kode " << deleteCode << " tidak ditemukan.\n";
   }
 }
 
-void searchByCode() {
+void searchByCode()
+{
   int searchCode;
   cout << "Masukkan kode produk untuk mencari : ";
   cin >> searchCode;
   cout << endl;
 
   auto it = productHash.find(searchCode);
-  if (it != productHash.end()) {
-    const Product& product = it->second;
+  if (it != productHash.end())
+  {
+    const Product &product = it->second;
     cout << "Produk Ditemukan : \n";
     cout << "Kode Produk  = " << product.code << endl;
     cout << "Nama Produk  = " << product.name << endl;
     cout << "Harga Produk = " << product.price << endl;
-  } else {
+  }
+  else
+  {
     cout << "\nProduk dengan kode " << searchCode << " tidak ditemukan.\n";
   }
 }
 
 // Fungsi baru dengan nama yang berbeda untuk mengatasi bug pada menu 5
-void searchByNameRangeMenu() {
+void searchByNameRangeMenu()
+{
   string startName, endName;
   cout << "Enter start of name range: ";
   cin >> startName;
@@ -178,22 +222,27 @@ void searchByNameRangeMenu() {
   vector<Product> result;
   searchByNameRange(root, startName, endName, result);
 
-  if (!result.empty()) {
+  if (!result.empty())
+  {
     cout << "Produk dalam rentang nama yang ditentukan :\n";
     cout << "+==========+==========+===========+\n";
     cout << "|   Code   |   Nama   |   Harga   |\n";
-    for (const auto& product : result) {
+    for (const auto &product : result)
+    {
       displayProduct(product);
     }
     cout << "+==========+==========+===========+\n";
     cout << endl;
-  } else {
+  }
+  else
+  {
     cout << "Tidak ada produk yang ditemukan dalam rentang nama yang "
             "ditentukan.\n";
   }
 }
 
-void sortingDescending() {
+void sortingDescending()
+{
   cout << "Produk Urut berdasarkan Nama (Descending):\n";
   cout << "+==========+==========+===========+\n";
   cout << "|   Code   |   Nama   |   Harga   |\n";
@@ -202,11 +251,13 @@ void sortingDescending() {
   cout << endl;
 }
 
-int main() {
+int main()
+{
   int pilihMenu;
   char menu;
 
-  do {
+  do
+  {
     system("cls");
     cout << "+==================================+\n";
     cout << "|            1232200010            |\n";
@@ -229,42 +280,50 @@ int main() {
     cin >> pilihMenu;
     cout << endl;
 
-    switch (pilihMenu) {
-      case 1: {
-        inputProduct();
-        break;
-      }
-      case 2: {
-        outputProduct();
-        break;
-      }
-      case 3: {
-        deleteProduct();
-        break;
-      }
-      case 4: {
-        searchByCode();
-        break;
-      }
-      case 5: {
-        searchByNameRangeMenu();  // Menggunakan fungsi yang berbeda
-        break;
-      }
-      case 6: {
-        sortingDescending();
-        break;
-      }
-      case 7: {
-        outputHistory();
-        break;
-      }
-      case 8:
-        cout << "Keluar dari Program.\n";
-        cleanupAndExit();
-        break;
-      default:
-        cout << "Opsi tidak valid. Silahkan coba lagi.\n";
-        break;
+    switch (pilihMenu)
+    {
+    case 1:
+    {
+      inputProduct();
+      break;
+    }
+    case 2:
+    {
+      outputProduct();
+      break;
+    }
+    case 3:
+    {
+      deleteProduct();
+      break;
+    }
+    case 4:
+    {
+      searchByCode();
+      break;
+    }
+    case 5:
+    {
+      searchByNameRangeMenu(); // Menggunakan fungsi yang berbeda
+      break;
+    }
+    case 6:
+    {
+      sortingDescending();
+      break;
+    }
+    case 7:
+    {
+      outputHistory();
+      break;
+    }
+    case 8:
+      cout << "Keluar dari Program.\n";
+      cleanupAndExit();
+      break;
+    default:
+      cout << "Opsi tidak valid. Silahkan coba lagi.\n";
+      break;
     }
 
     cout << "\nKembali ke menu? (y/n) = ";
