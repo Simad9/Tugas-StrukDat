@@ -4,28 +4,24 @@
 #include <unordered_map>
 #include <vector>
 
-using namespace std;  // Tambahkan baris ini
+using namespace std;
 
-// ===== STRUCT =====
+// Struktur Produk
 struct Product {
   string name;
   double price;
   int code;
 };
 
-// Pohon Pencarian Biner (Binary Search Tree) untuk menyimpan produk berdasarkan
-// nama produk
+// Node untuk Pohon Pencarian Biner (Binary Search Tree)
 struct TreeNode {
   Product data;
   TreeNode* left;
   TreeNode* right;
 };
 
-// Tabel hash untuk menyimpan informasi produk
 unordered_map<int, Product> productHash;
-TreeNode* root = nullptr;  // Tambahkan baris ini
-
-// ======= FUNGSI LOGIKA (BACK-END) ========
+TreeNode* root = nullptr;
 
 // Fungsi untuk memasukkan produk ke dalam Pohon Pencarian Biner
 void insertProduct(TreeNode*& root, const Product& product) {
@@ -40,21 +36,24 @@ void insertProduct(TreeNode*& root, const Product& product) {
   }
 }
 
+// Fungsi untuk menghapus Pohon Pencarian Biner
+void deleteTree(TreeNode* root) {
+  if (root != nullptr) {
+    deleteTree(root->left);
+    deleteTree(root->right);
+    delete root;
+  }
+}
+
 // Fungsi untuk melakukan traversal pasca pesanan untuk mengurutkan produk
 // berdasarkan nama dalam urutan menurun
 void postOrderTraversal(TreeNode* root) {
   if (root != nullptr) {
     postOrderTraversal(root->right);
-    // Isi - Tampilan Output versi 1
     cout << "+----------+----------+-----------+\n";
     cout << left << "| " << setw(8) << root->data.code << " | " << setw(8)
          << root->data.name << " | Rp." << setw(6) << root->data.price
          << " |\n";
-
-    // cout << "Product Name: " << root->data.name
-    //      << ", Price: " << root->data.price << ", Code: " << root->data.code
-    //      << endl;
-
     postOrderTraversal(root->left);
   }
 }
@@ -77,13 +76,26 @@ void searchByNameRange(TreeNode* root, const string& startName,
   }
 }
 
-vector<Product> deletedProducts;  // Tambahkan baris ini sebelum main
+vector<Product> deletedProducts;
 
-// ======== FUNGSI TAMPILAN (FRONT-END) ========
+// Fungsi untuk membersihkan memori dan keluar dari program
+void cleanupAndExit() {
+  deleteTree(root);
+  exit(0);
+}
+
+// Fungsi untuk menampilkan produk
+void displayProduct(const Product& product) {
+  cout << "+----------+----------+-----------+\n";
+  cout << left << "| " << setw(8) << product.code << " | " << setw(8)
+       << product.name << " | Rp." << setw(6) << product.price << " |\n";
+}
+
+// ======= FUNGSI TAMPILAN (FRONT-END) ========
+
 void inputProduct() {
   Product newProduct;
-
-  cout << "Masukan Data Produk : \n";
+  cout << "Masukkan Data Produk : \n";
   cout << "Nama Produk  : ";
   cin >> newProduct.name;
   cout << "Harga Produk : ";
@@ -91,81 +103,52 @@ void inputProduct() {
   cout << "Kode Produk  : ";
   cin >> newProduct.code;
 
-  // Masukkan ke dalam tabel hash
   productHash[newProduct.code] = newProduct;
-
-  // Masukkan ke dalam pohon pencarian biner
   insertProduct(root, newProduct);
 }
+
 void outputProduct() {
-  // Tampilkan produk menggunakan tabel hash
   cout << "List Produk : \n";
-  // Pembuka - Tampilan Output versi 1
   cout << "+==========+==========+===========+\n";
   cout << "|   Code   |   Nama   |   Harga   |\n";
-  // ---
   for (const auto& entry : productHash) {
-    const Product& product = entry.second;
-    // Isi - Tampilan Output versi 1
-    cout << "+----------+----------+-----------+\n";
-    cout << left << "| " << setw(8) << product.code << " | " << setw(8)
-         << product.name << " | Rp." << setw(6) << product.price << " |\n";
-
-    // Tampilan Output versi 2
-    // cout << "Nama  : " << product.name << endl;
-    // cout << "Harga : " << product.price << endl;
-    // cout << "Code  : " << product.code << endl << endl;
+    displayProduct(entry.second);
   }
-  // Penutup - Tampulan Output versi 1
   cout << "+==========+==========+===========+\n";
   cout << endl;
 }
+
 void outputHistory() {
-  // Lihat riwayat produk yang dihapus
   if (!deletedProducts.empty()) {
     cout << "Lihat Riwayat Produk yang Dihapus :\n";
-    // Pembuka - Tampilan Output versi 1
     cout << "+==========+==========+===========+\n";
     cout << "|   Code   |   Nama   |   Harga   |\n";
-    // ---
     for (const auto& product : deletedProducts) {
-      // Isi - Tampilan Output versi 1
-      cout << "+----------+----------+-----------+\n";
-      cout << left << "| " << setw(8) << product.code << " | " << setw(8)
-           << product.name << " | Rp." << setw(6) << product.price << " |\n";
-
-      // // Tampilan Output versi 2
-      // cout << "Nama  : " << product.name << endl;
-      // cout << "Harga : " << product.price << endl;
-      // cout << "Code  : " << product.code << endl << endl;
+      displayProduct(product);
     }
-    // Penutup - Tampulan Output versi 1
     cout << "+==========+==========+===========+\n";
     cout << endl;
   } else {
     cout << "Tidak ada riwayat produk yang dihapus.\n";
   }
 }
+
 void deleteProduct() {
-  // Hapus produk menggunakan tabel hash
   int deleteCode;
   cout << "Masukkan kode produk yang akan dihapus : ";
   cin >> deleteCode;
 
   auto it = productHash.find(deleteCode);
   if (it != productHash.end()) {
-    // Masukkan ke dalam pohon pencarian biner untuk sejarah
     deletedProducts.push_back(it->second);
-
-    // Hapus dari tabel hash
     productHash.erase(it);
     cout << "Produk dengan kode " << deleteCode << " berhasil dihapus.\n";
   } else {
     cout << "Produk dengan kode " << deleteCode << " tidak ditemukan.\n";
   }
 }
+
 void searchByCode() {
-  // Cari produk berdasarkan kode menggunakan tabel hash
   int searchCode;
   cout << "Masukkan kode produk untuk mencari : ";
   cin >> searchCode;
@@ -174,26 +157,22 @@ void searchByCode() {
   auto it = productHash.find(searchCode);
   if (it != productHash.end()) {
     const Product& product = it->second;
-    // Tampilan
     cout << "Produk Ditemukan : \n";
     cout << "Kode Produk  = " << product.code << endl;
     cout << "Nama Produk  = " << product.name << endl;
     cout << "Harga Produk = " << product.price << endl;
-    // cout << "Product found: " << product.name << ", Price: " << product.price
-    //      << ", Code: " << product.code << endl;
   } else {
     cout << "\nProduk dengan kode " << searchCode << " tidak ditemukan.\n";
   }
 }
-void searchByNameRange() {
-  // Cari produk berdasarkan rentang nama menggunakan pohon pencarian
-  // biner
+
+// Fungsi baru dengan nama yang berbeda untuk mengatasi bug pada menu 5
+void searchByNameRangeMenu() {
   string startName, endName;
   cout << "Enter start of name range: ";
   cin >> startName;
   cout << "Enter end of name range: ";
   cin >> endName;
-
   cout << endl;
 
   vector<Product> result;
@@ -201,22 +180,11 @@ void searchByNameRange() {
 
   if (!result.empty()) {
     cout << "Produk dalam rentang nama yang ditentukan :\n";
-    // Pembuka - Tampilan Output versi 1
     cout << "+==========+==========+===========+\n";
     cout << "|   Code   |   Nama   |   Harga   |\n";
-    // ---
     for (const auto& product : result) {
-      // Tampilan
-      // Isi - Tampilan Output versi 1
-      cout << "+----------+----------+-----------+\n";
-      cout << left << "| " << setw(8) << product.code << " | " << setw(8)
-           << product.name << " | Rp." << setw(6) << product.price << " |\n";
-
-      // cout << "Product Name: " << product.name << ", Price: " <<
-      // product.price
-      //      << ", Code: " << product.code << endl;
+      displayProduct(product);
     }
-    // Penutup - Tampulan Output versi 1
     cout << "+==========+==========+===========+\n";
     cout << endl;
   } else {
@@ -224,27 +192,21 @@ void searchByNameRange() {
             "ditentukan.\n";
   }
 }
+
 void sortingDescending() {
-  // Urutkan produk berdasarkan nama dalam urutan menurun menggunakan
-  // pohon pencarian biner
-  cout << "Produk Ururt berdasarkan Nama (Descending):\n";
-  // Pembuka - Tampilan Output versi 1
+  cout << "Produk Urut berdasarkan Nama (Descending):\n";
   cout << "+==========+==========+===========+\n";
   cout << "|   Code   |   Nama   |   Harga   |\n";
-  // ---
   postOrderTraversal(root);
-  // Penutup - Tampulan Output versi 1
   cout << "+==========+==========+===========+\n";
   cout << endl;
 }
 
 int main() {
-  // Deklarasi Variable
   int pilihMenu;
   char menu;
 
   do {
-    // Tampilan Awal
     system("cls");
     cout << "+==================================+\n";
     cout << "|            1232200010            |\n";
@@ -254,22 +216,19 @@ int main() {
     cout << "+==================================+\n";
     cout << "|          Toko Serba Ada          |\n";
     cout << "+=================================================+\n";
-    cout << "| 1. Produk Masukan                               |\n";  // INPUT
-    cout << "| 2. Tampilkan Produk                             |\n";  // OUTPUT
-    cout << "| 3. Hapus Produk                                 |\n";  // DELETE
-    cout << "| 4. Cari Produk berdasarkan Kode                 |\n";  // SEARCH
-                                                                      // BY CODE
-    cout << "| 5. Cari Produk berdasarkan Rentang Nama         |\n";  // SEARCH
-                                                                      // BY NAME
-    cout << "| 6. Urutkan Produk berdasarkan Nama (Descending) |\n";  // SORT
-    cout << "| 7. Lihat Riwayat Produk yang Dihapus            |\n";  // OUTPUT
-                                                                      // HISTORY
-    cout << "| 8. Keluar                                       |\n";  // EXIT
+    cout << "| 1. Produk Masukan                               |\n";
+    cout << "| 2. Tampilkan Produk                             |\n";
+    cout << "| 3. Hapus Produk                                 |\n";
+    cout << "| 4. Cari Produk berdasarkan Kode                 |\n";
+    cout << "| 5. Cari Produk berdasarkan Rentang Nama         |\n";
+    cout << "| 6. Urutkan Produk berdasarkan Nama (Descending) |\n";
+    cout << "| 7. Lihat Riwayat Produk yang Dihapus            |\n";
+    cout << "| 8. Keluar                                       |\n";
     cout << "+=================================================+\n";
     cout << "Pilih menu (1-8): ";
-    // Input Menu
     cin >> pilihMenu;
     cout << endl;
+
     switch (pilihMenu) {
       case 1: {
         inputProduct();
@@ -288,7 +247,7 @@ int main() {
         break;
       }
       case 5: {
-        searchByNameRange();
+        searchByNameRangeMenu();  // Menggunakan fungsi yang berbeda
         break;
       }
       case 6: {
@@ -301,14 +260,17 @@ int main() {
       }
       case 8:
         cout << "Keluar dari Program.\n";
-        exit(1);
+        cleanupAndExit();
         break;
       default:
         cout << "Opsi tidak valid. Silahkan coba lagi.\n";
         break;
     }
+
     cout << "\nKembali ke menu? (y/n) = ";
     cin >> menu;
   } while (menu == 'y');
+
+  cleanupAndExit();
   return 0;
 }
