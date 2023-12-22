@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <vector>
 
-using namespace std;  // Add this line
+using namespace std;  // Tambahkan baris ini
 
 // ===== STRUCT =====
 struct Product {
@@ -12,21 +12,20 @@ struct Product {
   int code;
 };
 
-// Binary Search Tree (Binary Search Tree) to store products based on product
-// names
+// Pohon Pencarian Biner (Binary Search Tree) untuk menyimpan produk berdasarkan nama produk
 struct TreeNode {
   Product data;
   TreeNode* left;
   TreeNode* right;
 };
 
-// Hash table to store product information
+// Tabel hash untuk menyimpan informasi produk
 unordered_map<int, Product> productHash;
-TreeNode* root = nullptr;  // Add this line
+TreeNode* root = nullptr;  // Tambahkan baris ini
 
 // ======= FUNGSI LOGIKA (BACK-END) ========
 
-// Function to insert product into Binary Search Tree
+// Fungsi untuk memasukkan produk ke dalam Pohon Pencarian Biner
 void insertProduct(TreeNode*& root, const Product& product) {
   if (root == nullptr) {
     root = new TreeNode{product, nullptr, nullptr};
@@ -39,8 +38,7 @@ void insertProduct(TreeNode*& root, const Product& product) {
   }
 }
 
-// Function to perform post-order traversal for sorting products by name in
-// descending order
+// Fungsi untuk melakukan traversal pasca pesanan untuk mengurutkan produk berdasarkan nama dalam urutan menurun
 void postOrderTraversal(TreeNode* root) {
   if (root != nullptr) {
     postOrderTraversal(root->right);
@@ -51,7 +49,7 @@ void postOrderTraversal(TreeNode* root) {
   }
 }
 
-// Function to search products based on name range in Binary Search Tree
+// Fungsi untuk mencari produk berdasarkan rentang nama di Pohon Pencarian Biner
 void searchByNameRange(TreeNode* root, const string& startName,
                        const string& endName, vector<Product>& result) {
   if (root != nullptr) {
@@ -69,7 +67,7 @@ void searchByNameRange(TreeNode* root, const string& startName,
   }
 }
 
-vector<Product> deletedProducts;  // Add this line before main
+vector<Product> deletedProducts;  // Tambahkan baris ini sebelum main
 
 // ======== FUNGSI TAMPILAN (FRONT-END) ========
 void input() {
@@ -83,14 +81,14 @@ void input() {
   cout << "Kode Produk  : ";
   cin >> newProduct.code;
 
-  // Insert into hash table
+  // Masukkan ke dalam tabel hash
   productHash[newProduct.code] = newProduct;
 
-  // Insert into binary search tree
+  // Masukkan ke dalam pohon pencarian biner
   insertProduct(root, newProduct);
 }
 void output() {
-  // Display products using hash table
+  // Tampilkan produk menggunakan tabel hash
   int index = 1;
   cout << "List Produk : \n";
   for (const auto& entry : productHash) {
@@ -112,7 +110,7 @@ void output() {
   }
 }
 void outputHistory() {
-  // View deleted products history
+  // Lihat riwayat produk yang dihapus
   if (!deletedProducts.empty()) {
     cout << "History Product Terhapus:\n";
     for (const auto& product : deletedProducts) {
@@ -185,17 +183,17 @@ int main() {
       }
 
       case 3: {
-        // Delete product using hash table
+        // Hapus produk menggunakan tabel hash
         int deleteCode;
         cout << "Enter product code to delete: ";
         cin >> deleteCode;
 
         auto it = productHash.find(deleteCode);
         if (it != productHash.end()) {
-          // Insert into binary search tree for history
+          // Masukkan ke dalam pohon pencarian biner untuk sejarah
           deletedProducts.push_back(it->second);
 
-          // Erase from hash table
+          // Hapus dari tabel hash
           productHash.erase(it);
           cout << "Product with code " << deleteCode << " deleted.\n";
         } else {
@@ -206,7 +204,7 @@ int main() {
       }
 
       case 4: {
-        // Search product by code using hash table
+        // Cari produk berdasarkan kode menggunakan tabel hash
         int searchCode;
         cout << "Enter product code to search: ";
         cin >> searchCode;
@@ -225,7 +223,7 @@ int main() {
       }
 
       case 5: {
-        // Search product by name range using binary search tree
+        // Cari produk berdasarkan rentang nama menggunakan pohon pencarian biner
         string startName, endName;
         cout << "Enter start of name range: ";
         cin >> startName;
@@ -250,7 +248,7 @@ int main() {
       }
 
       case 6: {
-        // Sort products by name in descending order using binary search tree
+        // Urutkan produk berdasarkan nama dalam urutan menurun menggunakan pohon pencarian biner
         cout << "Products sorted by name (Descending):\n";
         postOrderTraversal(root);
         break;
