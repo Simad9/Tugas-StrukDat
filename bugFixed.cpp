@@ -198,10 +198,19 @@ void searchByCode()
   if (it != productHash.end())
   {
     const Product &product = it->second;
-    cout << "Produk Ditemukan : \n";
-    cout << "Kode Produk  = " << product.code << endl;
-    cout << "Nama Produk  = " << product.name << endl;
-    cout << "Harga Produk = " << product.price << endl;
+    // Tampilan versi 1
+    cout << "Produk Ditemukan :\n";
+    cout << "+==========+==========+===========+\n";
+    cout << "|   Code   |   Nama   |   Harga   |\n";
+    cout << "+----------+----------+-----------+\n";
+    cout << left << "| " << setw(8) << product.code << " | " << setw(8) << product.name << " | Rp." << setw(6) << product.price << " |\n";
+    cout << "+==========+==========+===========+\n";
+    cout << endl;
+    // Tampilan versi 2
+    // cout << "Produk Ditemukan : \n";
+    // cout << "Kode Produk  = " << product.code << endl;
+    // cout << "Nama Produk  = " << product.name << endl;
+    // cout << "Harga Produk = " << product.price << endl;
   }
   else
   {
@@ -213,9 +222,9 @@ void searchByCode()
 void searchByNameRangeMenu()
 {
   string startName, endName;
-  cout << "Enter start of name range: ";
+  cout << "Masukkan awal rentang nama: ";
   cin >> startName;
-  cout << "Enter end of name range: ";
+  cout << "Masukkan akhir rentang nama: ";
   cin >> endName;
   cout << endl;
 
